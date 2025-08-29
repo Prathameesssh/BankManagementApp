@@ -5,11 +5,15 @@
 
 # Compiled classes
 bin/
+build/
 target/
 
 # Logs and temp files
 *.log
 *.tmp
+
+# Libraries
+*.jar
 
 # Maven (if used)
 pom.xml.tag
