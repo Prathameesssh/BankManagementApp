@@ -1,0 +1,26 @@
+# Eclipse specific
+.classpath
+.project
+.settings/
+
+# Compiled classes
+bin/
+target/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Maven (if used)
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# IDE folders (optional)
+.vscode/
+.idea/
