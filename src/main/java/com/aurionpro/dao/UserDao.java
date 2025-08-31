@@ -51,7 +51,7 @@ public class UserDao {
 
 				user = new User(id, name, address, empEmail, empPassword, mobile, aadharNo, createdAt, isAdmin,
 						isVerified, isRejected);
-				System.out.println(user);
+				System.out.println("User in userDo"+user);
 				return user;
 			}
 
@@ -92,14 +92,14 @@ public class UserDao {
 
 	}
 
-	public List<User> getPendingUsers() {
+	public List<User> getAllUsers() {
 		// TODO Auto-generated method stub
 		if (connection == null) {
 			throw new RuntimeException("Database Error");
 		}
 
 		List<User> users = new ArrayList<>();
-		String sqlStatement = "SELECT * FROM users WHERE is_verified = false";
+		String sqlStatement = "SELECT * FROM users";
 
 		try {
 			ps = connection.prepareStatement(sqlStatement);
@@ -180,14 +180,17 @@ public class UserDao {
 		if (connection == null) {
 			throw new RuntimeException("Database Error");
 		}
-		String query = "UPDATE users SET is_rejected = ? WHERE id = ?";
+		String query = "UPDATE users SET is_rejected = ?, is_verified= ? WHERE id = ?";
 		try {
 			ps = connection.prepareStatement(query);
 			ps.setBoolean(1, status);
-			ps.setInt(2, userId);
+			ps.setBoolean(2, true);
+			ps.setInt(3, userId);
 
 			int rowsUpdated = ps.executeUpdate();
+			System.out.println("Inside updateUserStatus");
 			return rowsUpdated > 0;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

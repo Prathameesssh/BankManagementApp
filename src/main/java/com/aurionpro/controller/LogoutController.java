@@ -8,34 +8,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.aurionpro.model.Account;
-import com.aurionpro.service.AdminService;
-
 /**
- * Servlet implementation class VerifyAccountController
+ * Servlet implementation class LogoutController
  */
-@WebServlet("/VerifyAccountController")
-public class VerifyAccountController extends HttpServlet {
+@WebServlet("/LogoutController")
+public class LogoutController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public VerifyAccountController() {
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public LogoutController() {
 		super();
-
+		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		int userId = Integer.parseInt(request.getParameter("userId"));
-		AdminService adminService = new AdminService();
-		boolean isApproved = adminService.approveUser(userId);
-		if(!isApproved) {
-			return;
-		}
-		Account account = adminService.createAccount(userId);
 		HttpSession session = request.getSession(false);
-		session.setAttribute("Account", account);
-		response.sendRedirect("AdminDashboardController");
+
+		if (session != null) {
+			session.invalidate();
+		}
+
+		response.sendRedirect(request.getContextPath() + "/IndexController");
+
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class Account {
 		this.userId = userId;
 		this.accountNumber = accountNumber;
 		this.balance = balance;
-		this.type = type;
+		this.setType(type);
 		this.createdAt = createdAt;
 	}
 
@@ -29,7 +29,7 @@ public class Account {
 		this.userId = userId;
 		this.accountNumber = accountNumber;
 		this.balance = balance;
-		this.type = type;
+		this.setType(type);
 		this.createdAt = createdAt;
 	}
 
@@ -63,6 +63,14 @@ public class Account {
 
 	public void setBalance(double balance) {
 		this.balance = balance;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Date getCreatedAt() {

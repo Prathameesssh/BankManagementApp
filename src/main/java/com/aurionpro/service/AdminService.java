@@ -10,11 +10,11 @@ import com.aurionpro.model.User;
 
 public class AdminService {
 
-	public static List<User> getPendingUser() {
+	public static List<User> getAllUser() {
 		// TODO Auto-generated method stub
 		UserDao userDao = new UserDao();
 
-		List<User> users = userDao.getPendingUsers();
+		List<User> users = userDao.getAllUsers();
 		return users;
 	}
 

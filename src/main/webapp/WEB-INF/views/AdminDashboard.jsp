@@ -57,7 +57,7 @@ body {
 			Verification</a> <a href="javascript:void(0)"
 			onclick="showSection('transactions')">All Transactions</a> <a
 			href="javascript:void(0)" onclick="showSection('freeze')">Freeze
-			Accounts</a>
+			Accounts</a> <a class="text-white" onclick="showSection('manageFunds')">Manage Users </a>
 		<hr class="bg-light">
 		<a href="LogoutController" class="text-danger">Logout</a>
 	</div>
@@ -74,6 +74,8 @@ body {
 				onclick="showSection('transactions')">All Transactions</button>
 			<button type="button" class="btn btn-outline-danger"
 				onclick="showSection('freeze')">Freeze Accounts</button>
+			<button type="button" class="btn btn-outline-warning"
+				onclick="showSection('manageFunds')">Manage Funds</button>
 		</div>
 
 		<!-- Pending Account Verification -->
@@ -148,7 +150,6 @@ body {
 								<th>Txn ID</th>
 								<th>From</th>
 								<th>To</th>
-								<th>Type</th>
 								<th>Date</th>
 							</tr>
 						</thead>
@@ -162,7 +163,6 @@ body {
 								<td><%=t.getId()%></td>
 								<td><%=t.getFrom_account()%></td>
 								<td><%=t.getTo_account()%></td>
-								<td><%=t.getType()%></td>
 								<td><%=t.getCreatedAt()%></td>
 							</tr>
 							<%
@@ -202,6 +202,38 @@ body {
 						</div>
 						<div class="col-md-4">
 							<button type="submit" class="btn btn-danger">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+		<!-- Manage Funds (Credit/Debit) -->
+		<section id="manageFunds" class="mb-5 section d-none">
+			<div class="card shadow-sm">
+				<div class="card-header bg-warning text-dark">Manage Funds</div>
+				<div class="card-body">
+					<p class="text-muted">Credit or debit funds to a user account.</p>
+					<form class="row g-3" action="ManageFundsController" method="post">
+						<div class="col-md-4">
+							<label for="accountNumber" class="form-label">Account
+								Number</label> <input type="text" name="accountNumber"
+								id="accountNumber" class="form-control"
+								placeholder="Enter Account Number" required>
+						</div>
+						<div class="col-md-4">
+							<label for="amount" class="form-label">Amount</label> <input
+								type="number" step="0.01" name="amount" id="amount"
+								class="form-control" placeholder="Enter Amount" required>
+						</div>
+						<div class="col-md-4">
+							<label for="actionType" class="form-label">Action</label> <select
+								class="form-select" name="actionType" id="actionType" required>
+								<option value="credit">Credit</option>
+								<option value="debit">Debit</option>
+							</select>
+						</div>
+						<div class="col-12 text-end">
+							<button type="submit" class="btn btn-warning">Submit</button>
 						</div>
 					</form>
 				</div>

@@ -8,18 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.aurionpro.service.AdminService;
-import com.aurionpro.service.UserService;
 
-/**
- * Servlet implementation class RejectAccountController
- */
 @WebServlet("/RejectAccountController")
 public class RejectAccountController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public RejectAccountController() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,10 +26,8 @@ public class RejectAccountController extends HttpServlet {
 		boolean isRejected = adminService.rejectUser(userId);
 
 		if (isRejected) {
-			// Redirect back to Admin Dashboard after rejecting
 			request.getRequestDispatcher("/WEB-INF/views/RejectPage.jsp").forward(request, response);
 		} else {
-			// Show error page if something failed
 			response.sendRedirect("error.jsp");
 		}
 

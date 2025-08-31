@@ -1,6 +1,8 @@
 package com.aurionpro.service;
 
+import com.aurionpro.dao.AccountDao;
 import com.aurionpro.dao.UserDao;
+import com.aurionpro.model.Account;
 import com.aurionpro.model.User;
 
 public class UserService {
@@ -27,6 +29,13 @@ public class UserService {
 		UserDao userDao = new UserDao();
 		User user = userDao.getUserById(userId);
 		return user;
+	}
+
+	public static Account getAccount(int id) {
+		// TODO Auto-generated method stub
+		AccountDao accountDao = new AccountDao();
+		Account account = accountDao.getUserAccount(id);
+		return account;
 	}
 
 }

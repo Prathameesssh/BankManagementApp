@@ -13,14 +13,13 @@ public class IndexController extends HttpServlet {
 
 	public IndexController() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		String action = request.getParameter("action");
-		if(action==null) {
+		if (action == null) {
 			request.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(request, response);
 			return;
 		}
@@ -44,7 +43,6 @@ public class IndexController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

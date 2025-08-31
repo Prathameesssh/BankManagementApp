@@ -15,39 +15,42 @@ import com.aurionpro.service.UserService;
 public class LoginPageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    public LoginPageController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	public LoginPageController() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		
-		User user = UserService.getUser(email,password);
-		
-		if(user==null) {
-			response.sendRedirect("ErrorController");  
+
+		User user = UserService.getUser(email, password);
+
+		if (user == null) {
+			response.sendRedirect("ErrorController");
 			return;
 		}
-		
-		if(!user.isVerified()) {
+
+		if (!user.isVerified()) {
 			request.getRequestDispatcher("/WEB-INF/views/waitingRoom.jsp").forward(request, response);
 		}
-		
+
 		HttpSession session = request.getSession();
 		session.setAttribute("user", user);
-		if(user.isAdmin()) {
+
+		if (user.isAdmin()) {
 			response.sendRedirect("AdminDashboardController");
 			return;
 		}
-		request.getRequestDispatcher("/WEB-INF/views/UserDashboard.jsp").forward(request, response);
-		
+		response.sendRedirect("UserDashboardController");
+
 	}
 
 }
