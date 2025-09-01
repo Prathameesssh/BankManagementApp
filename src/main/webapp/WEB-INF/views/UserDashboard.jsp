@@ -195,9 +195,22 @@ body {
 				<!-- Transactions Section -->
 				<div id="transactions" class="section d-none">
 					<h2>Previous Transactions</h2>
+
+					<!-- Filter UI -->
+					<div class="mb-3 d-flex gap-2">
+						<select id="filterColumn" class="form-select w-auto">
+							<option value="0">Txn ID</option>
+							<option value="1">From Account</option>
+							<option value="2">To Account</option>
+							<option value="3">Amount</option>
+							<option value="4">Date</option>
+						</select> <input type="text" id="filterInput" class="form-control w-auto"
+							placeholder="Search transactions...">
+					</div>
+
 					<div class="card shadow-sm mt-3">
 						<div class="card-body p-0">
-							<table class="table table-striped mb-0">
+							<table id="transactionsTable" class="table table-striped mb-0">
 								<thead class="table-light">
 									<tr>
 										<th>Txn ID</th>
@@ -235,6 +248,29 @@ body {
 						</div>
 					</div>
 				</div>
+
+				<!-- JavaScript for client-side filtering -->
+				<script>
+    document.getElementById("filterInput").addEventListener("keyup", function () {
+        let filterValue = this.value.toLowerCase();
+        let columnIndex = document.getElementById("filterColumn").value;
+        let table = document.getElementById("transactionsTable");
+        let trs = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < trs.length; i++) { // skip header row
+            let td = trs[i].getElementsByTagName("td")[columnIndex];
+            if (td) {
+                let txtValue = td.textContent || td.innerText;
+                if (txtValue.toLowerCase().includes(filterValue)) {
+                    trs[i].style.display = "";
+                } else {
+                    trs[i].style.display = "none";
+                }
+            }
+        }
+    });
+</script>
+
 			</div>
 		</div>
 	</div>
