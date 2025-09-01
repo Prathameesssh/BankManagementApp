@@ -38,6 +38,9 @@ public class SendMoneyController extends HttpServlet {
 			response.sendRedirect("UserDashboardController");
 		}
 		boolean transferMoney = TransactionService.transferMoney(fromAccount,toAccount,transferAmount);
+		if(!transferMoney) {
+			System.out.println("Error occoured");
+		}
 		response.sendRedirect("UserDashboardController");
 		
 		

@@ -9,12 +9,13 @@ public class Account {
 	private double balance;
 	private Date createdAt;
 	private String type;
+	private boolean isFreezed;
 
 	public Account() {
 		super();
 	}
 
-	public Account(int id, int userId, String accountNumber, double balance, String type, Date createdAt) {
+	public Account(int id, int userId, String accountNumber, double balance, String type, Date createdAt, boolean isFreezed) {
 		super();
 		this.id = id;
 		this.userId = userId;
@@ -22,6 +23,7 @@ public class Account {
 		this.balance = balance;
 		this.setType(type);
 		this.createdAt = createdAt;
+		this.setFreezed(isFreezed);
 	}
 
 	public Account(int userId, String accountNumber, double balance, String type, Date createdAt) {
@@ -71,6 +73,14 @@ public class Account {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public boolean isFreezed() {
+		return isFreezed;
+	}
+
+	public void setFreezed(boolean isFreezed) {
+		this.isFreezed = isFreezed;
 	}
 
 	public Date getCreatedAt() {

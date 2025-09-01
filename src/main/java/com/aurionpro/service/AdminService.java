@@ -7,6 +7,7 @@ import com.aurionpro.dao.AccountDao;
 import com.aurionpro.dao.UserDao;
 import com.aurionpro.model.Account;
 import com.aurionpro.model.User;
+import com.aurionpro.utils.AuthBalance;
 
 public class AdminService {
 
@@ -43,6 +44,37 @@ public class AdminService {
 	        sb.append(chars.charAt(rnd.nextInt(chars.length())));
 	    }
 	    return sb.toString();
+	}
+
+	public boolean changeFreezeStatus(String accountNumber, boolean status) {
+		// TODO Auto-generated method stub
+		AccountDao accountDao = new AccountDao();
+		
+		return accountDao.changeFreezeStatus(accountNumber,status);
+	}
+
+	public boolean creditAccount(String accountNumber, double amount) {
+		// TODO Auto-generated method stub
+		AccountDao accountDao = new AccountDao();
+		
+		return accountDao.creditAccount(accountNumber, amount);
+	}
+
+	public boolean debitAccount(String accountNumber, double amount) {
+		// TODO Auto-generated method stub
+		AccountDao accountDao = new AccountDao();
+		Account account = accountDao.getUserAccount(accountNumber);
+		boolean isBalanceAvailable = AuthBalance.checkSenderBalance(account, amount);
+		if(!isBalanceAvailable)
+			return false;
+		return accountDao.debitAccount(accountNumber, amount);
+	}
+
+	public static List<Account> getAllAccounts() {
+		// TODO Auto-generated method stub
+		AccountDao accountDao = new AccountDao();
+		
+		return accountDao.getAllAccounts();
 	}
 
 }

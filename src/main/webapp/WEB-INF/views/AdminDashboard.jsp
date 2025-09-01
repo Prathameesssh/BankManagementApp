@@ -1,8 +1,14 @@
+<%@page import="com.aurionpro.model.Account"%>
 <%@page import="com.aurionpro.model.User"%>
 <%@page import="com.aurionpro.model.Transaction"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List"%>
+<%
+// Assume session contains a List<User> named "users"
+List<Account> accounts = (List<Account>) session.getAttribute("accounts");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +63,8 @@ body {
 			Verification</a> <a href="javascript:void(0)"
 			onclick="showSection('transactions')">All Transactions</a> <a
 			href="javascript:void(0)" onclick="showSection('freeze')">Freeze
-			Accounts</a> <a class="text-white" onclick="showSection('manageFunds')">Manage Users </a>
+			Accounts</a> <a class="text-white" onclick="showSection('manageFunds')">Manage
+			Users </a>
 		<hr class="bg-light">
 		<a href="LogoutController" class="text-danger">Logout</a>
 	</div>
@@ -143,44 +150,121 @@ body {
 			<div class="card shadow-sm">
 				<div class="card-header bg-success text-white">All User
 					Transactions</div>
-				<div class="card-body" style="max-height: 300px; overflow-y: auto;">
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th>Txn ID</th>
-								<th>From</th>
-								<th>To</th>
-								<th>Date</th>
-							</tr>
-						</thead>
-						<tbody>
-							<%
-							List<Transaction> txns = (List<Transaction>) session.getAttribute("allTransactions");
-							if (txns != null && !txns.isEmpty()) {
-								for (Transaction t : txns) {
-							%>
-							<tr>
-								<td><%=t.getId()%></td>
-								<td><%=t.getFrom_account()%></td>
-								<td><%=t.getTo_account()%></td>
-								<td><%=t.getCreatedAt()%></td>
-							</tr>
-							<%
-							}
-							} else {
-							%>
-							<tr>
-								<td colspan="5" class="text-center text-muted">No
-									transactions found</td>
-							</tr>
-							<%
-							}
-							%>
-						</tbody>
-					</table>
+				<div class="card-body">
+
+					<!-- Filter Form -->
+					<div class="mb-3 row">
+						<div class="col-md-3">
+							<label for="fromDate" class="form-label">From Date</label> <input
+								type="date" id="fromDate" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<label for="toDate" class="form-label">To Date</label> <input
+								type="date" id="toDate" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<label for="txnId" class="form-label">Transaction ID</label> <input
+								type="text" id="txnId" class="form-control" placeholder="Txn ID">
+						</div>
+						<div class="col-md-3">
+							<label for="accountNo" class="form-label">Account No.</label> <input
+								type="text" id="accountNo" class="form-control"
+								placeholder="From/To Account">
+						</div>
+					</div>
+					<button class="btn btn-primary mb-3" onclick="filterTransactions()">Filter</button>
+					<button class="btn btn-secondary mb-3" onclick="resetFilter()">Reset</button>
+
+					<!-- Transaction Table -->
+					<div style="max-height: 300px; overflow-y: auto;">
+						<table id="txnTable" class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Txn ID</th>
+									<th>From</th>
+									<th>To</th>
+									<th>Amount</th>
+									<th>Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								List<Transaction> txns = (List<Transaction>) session.getAttribute("allTransactions");
+								if (txns != null && !txns.isEmpty()) {
+									for (Transaction t : txns) {
+								%>
+								<tr>
+									<td><%=t.getId()%></td>
+									<td><%=t.getFrom_account()%></td>
+									<td><%=t.getTo_account()%></td>
+									<td><%=String.format("%.2f", t.getAmount())%></td>
+									<td><%=t.getCreatedAt()%></td>
+								</tr>
+								<%
+								}
+								} else {
+								%>
+								<tr>
+									<td colspan="5" class="text-center text-muted">No
+										transactions found</td>
+								</tr>
+								<%
+								}
+								%>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</section>
+
+		<script>
+	function filterTransactions() {
+		const fromDate = document.getElementById("fromDate").value;
+		const toDate = document.getElementById("toDate").value;
+		const txnId = document.getElementById("txnId").value.toLowerCase();
+		const accountNo = document.getElementById("accountNo").value.toLowerCase();
+
+		const table = document.getElementById("txnTable");
+		const rows = table.getElementsByTagName("tr");
+
+		for (let i = 1; i < rows.length; i++) { // skip header
+			const cells = rows[i].getElementsByTagName("td");
+			if (cells.length === 0) continue;
+
+			const rowTxnId = cells[0].innerText.toLowerCase();
+			const rowFrom = cells[1].innerText.toLowerCase();
+			const rowTo = cells[2].innerText.toLowerCase();
+			const rowDate = cells[4].innerText;
+
+			let showRow = true;
+
+			// Transaction ID filter
+			if (txnId && !rowTxnId.includes(txnId)) showRow = false;
+
+			// Account number filter
+			if (accountNo && !(rowFrom.includes(accountNo) || rowTo.includes(accountNo))) showRow = false;
+
+			// Date filter
+			if (fromDate || toDate) {
+				const txnDate = new Date(rowDate);
+				if (fromDate && txnDate < new Date(fromDate)) showRow = false;
+				if (toDate && txnDate > new Date(toDate)) showRow = false;
+			}
+
+			rows[i].style.display = showRow ? "" : "none";
+		}
+	}
+
+	function resetFilter() {
+		document.getElementById("fromDate").value = "";
+		document.getElementById("toDate").value = "";
+		document.getElementById("txnId").value = "";
+		document.getElementById("accountNo").value = "";
+		filterTransactions(); // reset to show all
+	}
+</script>
+
 
 		<!-- Freeze Accounts -->
 		<section id="freeze" class="mb-5 section d-none">
@@ -204,6 +288,54 @@ body {
 							<button type="submit" class="btn btn-danger">Submit</button>
 						</div>
 					</form>
+					<!-- Currently Frozen Accounts Table -->
+					<p class="text-muted mb-2">Currently frozen accounts:</p>
+					<table class="table table-striped">
+						<thead class="table-light">
+							<tr>
+								<th>User ID</th>
+								<th>Name</th>
+								<th>Account Number</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%
+							boolean anyFrozen = false;
+							if (accounts != null) {
+								for (Account a : accounts) {
+									if (a.isFreezed()) {
+								anyFrozen = true;
+							%>
+							<tr>
+								<td><%=a.getId()%></td>
+								<td><%=a.getUserId()%></td>
+								<td><%=a.getAccountNumber()%></td>
+								<td>
+									<form action="FreezeAccountController" method="post"
+										style="display: inline;">
+										<input type="hidden" name="accountNumber"
+											value="<%=a.getAccountNumber()%>"> <input
+											type="hidden" name="action" value="unfreeze">
+										<button type="submit" class="btn btn-sm btn-success">Unfreeze</button>
+									</form>
+								</td>
+							</tr>
+							<%
+							}
+							}
+							}
+							if (!anyFrozen) {
+							%>
+							<tr>
+								<td colspan="4" class="text-center text-muted">No frozen
+									accounts</td>
+							</tr>
+							<%
+							}
+							%>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</section>

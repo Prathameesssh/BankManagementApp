@@ -75,6 +75,8 @@ public class TransactionDao {
 				System.out.println("Into transaction: "+transaction);
 				transactions.add(transaction);
 			}
+			ps.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

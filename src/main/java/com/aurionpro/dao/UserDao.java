@@ -58,6 +58,15 @@ public class UserDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				ps.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 		// TODO Auto-generated method stub
@@ -73,20 +82,28 @@ public class UserDao {
 
 		String sql = "INSERT INTO users (name, address, email, password, mobile, aadhar_no, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
-		try (Connection conn = Database.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try{
 
-			pstmt.setString(1, user.getName());
-			pstmt.setString(2, user.getAddress());
-			pstmt.setString(3, user.getEmail());
-			pstmt.setString(4, user.getPassword());
-			pstmt.setLong(5, user.getMobile());
-			pstmt.setLong(6, user.getAadharNo());
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getAddress());
+			ps.setString(3, user.getEmail());
+			ps.setString(4, user.getPassword());
+			ps.setLong(5, user.getMobile());
+			ps.setLong(6, user.getAadharNo());
 
-			int rowsInserted = pstmt.executeUpdate();
+			int rowsInserted = ps.executeUpdate();
 			return rowsInserted > 0; // true if at least one row inserted
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return false;
 
@@ -127,6 +144,15 @@ public class UserDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				ps.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 		// TODO Auto-generated method stub
@@ -165,6 +191,8 @@ public class UserDao {
 						isVerified, isRejected);
 				return user;
 			}
+			ps.close();
+			rs.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -189,12 +217,39 @@ public class UserDao {
 
 			int rowsUpdated = ps.executeUpdate();
 			System.out.println("Inside updateUserStatus");
+			ps.close();
 			return rowsUpdated > 0;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public boolean updateUser(User user) {
+		// TODO Auto-generated method stub
+		if (connection == null) {
+			throw new RuntimeException("Database Error");
+		}
+		String updateSQL = "UPDATE users SET name = ?, address = ?, email = ?, mobile = ? WHERE id = ?";
+	    
+	    try {
+	        ps = connection.prepareStatement(updateSQL);
+	        ps.setString(1, user.getName());
+	        ps.setString(2, user.getAddress());
+	        ps.setString(3, user.getEmail());
+	        ps.setLong(4, user.getMobile());
+	        ps.setInt(5, user.getId());
+	        
+	        int rowsAffected = ps.executeUpdate();
+	        ps.close();
+	        
+	        return rowsAffected > 0; // Returns true if update was successful
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 }

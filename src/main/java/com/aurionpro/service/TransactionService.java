@@ -32,6 +32,14 @@ public class TransactionService {
 			return false;
 		}
 		boolean addTransaction = transactionDao.addTransaction(fromAccount, toAccount, transferAmount);
-		return true;
+		return addTransaction;
+	}
+
+	public static boolean addTransaction(String accountNumber, String string, double amount) {
+		// TODO Auto-generated method stub
+		TransactionDao transactionDao = new TransactionDao();
+		boolean addTransaction = transactionDao.addTransaction(accountNumber, string, amount);
+		return addTransaction;
+		
 	}
 }

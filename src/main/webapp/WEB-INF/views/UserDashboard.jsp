@@ -189,11 +189,6 @@ body {
 								class="form-control" name="mobile" value="<%=user.getMobile()%>"
 								required>
 						</div>
-						<div class="mb-3">
-							<label class="form-label">Aadhar Number</label> <input
-								type="text" class="form-control" name="aadharNo"
-								value="<%=user.getAadharNo()%>" required>
-						</div>
 						<button type="submit" class="btn btn-warning">Update</button>
 					</form>
 				</div>

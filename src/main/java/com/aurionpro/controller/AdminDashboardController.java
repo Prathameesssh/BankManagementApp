@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.aurionpro.model.Account;
 import com.aurionpro.model.Transaction;
 import com.aurionpro.model.User;
 import com.aurionpro.service.AdminService;
@@ -33,6 +34,7 @@ public class AdminDashboardController extends HttpServlet {
 		// TODO Auto-generated method stub
 		List<User> users = AdminService.getAllUser();
 		List<Transaction> allTransactions = TransactionService.getAllTransactions();
+		List<Account> accounts = AdminService.getAllAccounts();
 		HttpSession session = request.getSession(false);
 		session.setAttribute("users", users);
 		List<User> pendingUsers = new ArrayList<>();
@@ -44,6 +46,7 @@ public class AdminDashboardController extends HttpServlet {
 		}
 		session.setAttribute("pendingUsers", pendingUsers);
 		session.setAttribute("allTransactions", allTransactions);
+		session.setAttribute("accounts", accounts);
 
 		request.getRequestDispatcher("/WEB-INF/views/AdminDashboard.jsp").forward(request, response);
 	}
