@@ -8,9 +8,9 @@ import com.aurionpro.model.User;
 public class UserService {
 
 	public static User getUser(String email, String password) {
-		
+
 		UserDao userDao = new UserDao();
-		User user = userDao.getUser(email,password);
+		User user = userDao.getUser(email, password);
 		System.out.println(user);
 		return user;
 	}
@@ -18,8 +18,8 @@ public class UserService {
 	public static boolean addUser(String name, String address, String email, String password, long mobile,
 			long aadharNo) {
 		UserDao userDao = new UserDao();
-		
-		User user = new User(name,address,email,password,mobile,aadharNo);
+
+		User user = new User(name, address, email, password, mobile, aadharNo);
 		boolean isAdded = userDao.addUser(user);
 		return isAdded;
 	}
@@ -41,8 +41,15 @@ public class UserService {
 	public boolean updateUser(User user) {
 		// TODO Auto-generated method stub
 		UserDao userDao = new UserDao();
-		
+
 		return userDao.updateUser(user);
+	}
+
+	public static Account getAccount(String accountNumber) {
+		
+		AccountDao accountDao = new AccountDao();
+		Account account = accountDao.getUserAccount(accountNumber);
+		return account;
 	}
 
 }

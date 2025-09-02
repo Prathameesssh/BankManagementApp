@@ -148,10 +148,26 @@ body {
 						</div>
 				</section>
 
-
-				<!-- Send Money Section -->
+				<!-- Update Profile Section -->
 				<div id="sendMoney" class="section d-none">
 					<h2>Send Money</h2>
+
+					<%
+					String sendError = (String) session.getAttribute("error");
+					String sendSuccess = (String) session.getAttribute("success");
+					if (sendError != null) {
+					%>
+					<div class="alert alert-danger"><%=sendError%></div>
+					<%
+					session.removeAttribute("sendError");
+					} else if (sendSuccess != null) {
+					%>
+					<div class="alert alert-success"><%=sendSuccess%></div>
+					<%
+					session.removeAttribute("sendSuccess");
+					}
+					%>
+
 					<form action="SendMoneyController" method="post" class="mt-3">
 						<div class="mb-3">
 							<label class="form-label">To Account</label> <input type="text"
@@ -165,33 +181,84 @@ body {
 					</form>
 				</div>
 
+
 				<!-- Update Profile Section -->
 				<div id="updateProfile" class="section d-none">
 					<h2>Update Profile</h2>
-					<form action="UpdateProfileController" method="post" class="mt-3">
+					<form action="UpdateProfileController" method="post" class="mt-3"
+						onsubmit="return validateProfileForm()">
 						<div class="mb-3">
 							<label class="form-label">Full Name</label> <input type="text"
-								class="form-control" name="fullName" value="<%=user.getName()%>"
-								required>
+								class="form-control" id="fullName" name="fullName"
+								value="<%=user.getName()%>" required> <small
+								id="nameError" class="text-danger"></small>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Address</label> <input type="text"
-								class="form-control" name="address"
-								value="<%=user.getAddress()%>" required>
+								class="form-control" id="address" name="address"
+								value="<%=user.getAddress()%>" required> <small
+								id="addressError" class="text-danger"></small>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Email</label> <input type="email"
-								class="form-control" name="email" value="<%=user.getEmail()%>"
-								required>
+								class="form-control" id="email" name="email"
+								value="<%=user.getEmail()%>" required> <small
+								id="emailError" class="text-danger"></small>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Mobile</label> <input type="text"
-								class="form-control" name="mobile" value="<%=user.getMobile()%>"
-								required>
+								class="form-control" id="mobile" name="mobile"
+								value="<%=user.getMobile()%>" required> <small
+								id="mobileError" class="text-danger"></small>
 						</div>
 						<button type="submit" class="btn btn-warning">Update</button>
 					</form>
 				</div>
+
+				<script>
+function validateProfileForm() {
+    let valid = true;
+
+    // Reset error messages
+    document.getElementById("nameError").innerText = "";
+    document.getElementById("addressError").innerText = "";
+    document.getElementById("emailError").innerText = "";
+    document.getElementById("mobileError").innerText = "";
+
+    // Full Name validation
+    const fullName = document.getElementById("fullName").value.trim();
+    if (fullName.length < 3) {
+        document.getElementById("nameError").innerText = "Name must be at least 3 characters long.";
+        valid = false;
+    }
+
+    // Address validation
+    const address = document.getElementById("address").value.trim();
+    if (address.length < 5) {
+        document.getElementById("addressError").innerText = "Address must be at least 5 characters long.";
+        valid = false;
+    }
+
+    // Email validation (already handled by type="email", but add extra check)
+    const email = document.getElementById("email").value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById("emailError").innerText = "Please enter a valid email.";
+        valid = false;
+    }
+
+    // Mobile validation (10 digits only)
+    const mobile = document.getElementById("mobile").value.trim();
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(mobile)) {
+        document.getElementById("mobileError").innerText = "Mobile number must be 10 digits.";
+        valid = false;
+    }
+
+    return valid; // if false, form won’t submit
+}
+</script>
+
 				<!-- Transactions Section -->
 				<div id="transactions" class="section d-none">
 					<h2>Previous Transactions</h2>

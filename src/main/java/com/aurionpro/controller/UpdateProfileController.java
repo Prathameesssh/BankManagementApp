@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.aurionpro.model.User;
 import com.aurionpro.service.UserService;
+import com.aurionpro.utils.UserAuthentication;
 
 /**
  * Servlet implementation class UpdateProfileController
@@ -43,6 +44,15 @@ public class UpdateProfileController extends HttpServlet {
 	    String email = request.getParameter("email");
 	    String mobile = request.getParameter("mobile");
 	    
+	    UserAuthentication userAuthentication = new UserAuthentication();
+	    boolean isDataCorrect = userAuthentication.validate(fullName, address, email, Long.parseLong(mobile));
+	    
+	    if(!isDataCorrect) {
+	    	 request.setAttribute("message", "Failed to update profile. Please try again.");
+	            request.setAttribute("messageType", "error");
+	            response.sendRedirect("UserDashboardController");
+	            return;
+	    }
 	    // Get current user from session
 	    User user = (User) request.getSession().getAttribute("user");
 	    

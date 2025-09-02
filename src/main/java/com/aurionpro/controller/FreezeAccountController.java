@@ -79,7 +79,7 @@ public class FreezeAccountController extends HttpServlet {
 	    }
 	    
 	    // Redirect back to admin dashboard
-	    request.getRequestDispatcher("/WEB-INF/views/AdminDashboard.jsp").forward(request, response);
+	    response.sendRedirect("AdminDashboardController");
 	}
 
 }

@@ -195,8 +195,19 @@ body {
 								%>
 								<tr>
 									<td><%=t.getId()%></td>
-									<td><%=t.getFrom_account()%></td>
-									<td><%=t.getTo_account()%></td>
+
+									<!-- Hyperlink for From Account -->
+									<td><a
+										href="UserAccountController?accountNumber=<%=t.getFrom_account()%>">
+											<%=t.getFrom_account()%>
+									</a></td>
+
+									<!-- Hyperlink for To Account -->
+									<td><a
+										href="UserAccountController?accountNumber=<%=t.getTo_account()%>">
+											<%=t.getTo_account()%>
+									</a></td>
+
 									<td><%=String.format("%.2f", t.getAmount())%></td>
 									<td><%=t.getCreatedAt()%></td>
 								</tr>

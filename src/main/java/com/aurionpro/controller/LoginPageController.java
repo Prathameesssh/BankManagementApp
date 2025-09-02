@@ -34,12 +34,14 @@ public class LoginPageController extends HttpServlet {
 		User user = UserService.getUser(email, password);
 
 		if (user == null) {
-			response.sendRedirect("ErrorController");
+			request.setAttribute("errorMessage", "Invalid Credentials! Please try again.");
+			request.getRequestDispatcher("/WEB-INF/views/LoginPage.jsp").forward(request, response);
 			return;
 		}
 
 		if (!user.isVerified()) {
 			request.getRequestDispatcher("/WEB-INF/views/waitingRoom.jsp").forward(request, response);
+			return;
 		}
 
 		HttpSession session = request.getSession();
@@ -49,8 +51,8 @@ public class LoginPageController extends HttpServlet {
 			response.sendRedirect("AdminDashboardController");
 			return;
 		}
+
 		response.sendRedirect("UserDashboardController");
 
 	}
-
 }

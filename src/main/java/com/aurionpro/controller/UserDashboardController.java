@@ -32,7 +32,9 @@ public class UserDashboardController extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		
 		Account userAccount = UserService.getAccount(user.getId());
+		
 		if(userAccount==null) {
+			
 			response.sendRedirect("ErrorController");  
 			return;
 		}

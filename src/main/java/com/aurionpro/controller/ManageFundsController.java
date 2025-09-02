@@ -6,40 +6,34 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.aurionpro.model.Account;
 import com.aurionpro.service.AdminService;
 import com.aurionpro.service.TransactionService;
 
-/**
- * Servlet implementation class ManageFundsController
- */
 @WebServlet("/ManageFundsController")
 public class ManageFundsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public ManageFundsController() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    // Read form parameters
+		
+		HttpSession session = request.getSession(false);
+		Account userAccount = (Account) session.getAttribute("userAccount");
+		
 	    String accountNumber = request.getParameter("accountNumber");
-	    String actionType = request.getParameter("actionType");  // "credit" or "debit"
+	    String adminAccount = userAccount.getAccountNumber();
+	    String actionType = request.getParameter("actionType");
 	    String amountParam = request.getParameter("amount");
 	    
 	    // Parse amount
@@ -49,8 +43,7 @@ public class ManageFundsController extends HttpServlet {
 	    } catch (NumberFormatException e) {
 	        request.setAttribute("message", "Invalid amount format");
 	        request.setAttribute("messageType", "error");
-	        request.getRequestDispatcher("/WEB-INF/views/AdminDashboard.jsp")
-	               .forward(request, response);
+	        response.sendRedirect("AdminDashboardController");
 	        return;
 	    }
 	    
@@ -64,7 +57,7 @@ public class ManageFundsController extends HttpServlet {
 	        success = adminService.creditAccount(accountNumber, amount);
 	        if (success) {
 	            // record transaction (credit)
-	            TransactionService.addTransaction(accountNumber, "Integro Bank", amount);
+	            TransactionService.addTransaction(adminAccount, accountNumber, amount);
 	            msg = "Credited ₹" + String.format("%.2f", amount) + " to " + accountNumber;
 	        } else {
 	            msg = "Failed to credit account " + accountNumber;
@@ -73,7 +66,7 @@ public class ManageFundsController extends HttpServlet {
 	        success = adminService.debitAccount(accountNumber, amount);
 	        if (success) {
 	            // record transaction (debit)
-	        	TransactionService.addTransaction("Integro Bank", accountNumber, amount);
+	        	TransactionService.addTransaction(accountNumber,adminAccount , amount);
 	            msg = "Debited ₹" + String.format("%.2f", amount) + " from " + accountNumber;
 	        } else {
 	            msg = "Failed to debit account " + accountNumber;
@@ -85,8 +78,7 @@ public class ManageFundsController extends HttpServlet {
 	    request.setAttribute("messageType", success ? "success" : "error");
 	    
 	    // Forward back to dashboard
-	    request.getRequestDispatcher("/WEB-INF/views/AdminDashboard.jsp")
-	           .forward(request, response);
+	    response.sendRedirect("AdminDashboardController");
 	}
 
 
